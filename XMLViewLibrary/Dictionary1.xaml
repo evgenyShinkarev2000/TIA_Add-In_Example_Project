@@ -1,0 +1,34 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <DataTemplate x:Key="myColumnHeaderTemplate">
+        <TextBox
+            Background="Transparent"
+            BorderThickness="0"
+            IsReadOnly="True"
+            TextWrapping="Wrap"
+            Text="{Binding Mode=OneTime}">
+        </TextBox>
+    </DataTemplate>
+    <DataTemplate x:Key="myCellTemplate">
+        <TextBox
+            Background="Transparent"
+            BorderThickness="0"
+            IsReadOnly="True"
+            TextWrapping="Wrap"
+            Text="{Binding Mode=OneTime}">
+        </TextBox>
+    </DataTemplate>
+    <DataTemplate x:Key="myCellHighlihtTemplate">
+        <RichTextBox
+            Background="Transparent"
+            BorderThickness="0"
+            IsReadOnly="True"
+            >
+            <FlowDocument>
+                <Paragraph>
+                    <Run Text="{Binding Mode=OneTime}"></Run>
+                </Paragraph>
+            </FlowDocument>
+        </RichTextBox>
+    </DataTemplate>
+</ResourceDictionary>

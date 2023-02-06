@@ -1,0 +1,129 @@
+﻿<UserControl x:Class="XMLViewLibrary.MainFormControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:XMLViewLibrary"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary Source="Dictionary1.xaml"></ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <DockPanel VerticalAlignment="Center">
+            <Label VerticalAlignment="Center">Search</Label>
+            <TextBox x:Name="searchTextBox" Height="20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinWidth="100" Padding="5,0,5,0" TextChanged="searchTextBox_TextChanged"></TextBox>
+            <Label x:Name="foundCountLabel" VerticalAlignment="Center"></Label>
+            <Button Grid.Row="0" Content="Find" Width="70" Margin="10" HorizontalAlignment="Right" HorizontalContentAlignment="Center" Click="SearchButtonClick"/>
+        </DockPanel>
+        <DataGrid x:Name="recordsDataGrid" IsReadOnly="True" Grid.Row="1" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Variable name" HeaderTemplate="{StaticResource ResourceKey=myColumnHeaderTemplate}" SortMemberPath="VariableName">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Name="wrapper" Orientation="Vertical" HorizontalAlignment="Stretch">
+                                <TextBox Name="textBoxWidth" Height="0" Visibility="Hidden" Text="{Binding Mode=OneTime, Path=VariableName}"></TextBox>
+                                <RichTextBox
+                                Background="Transparent"
+                                BorderThickness="0"
+                                IsReadOnly="True"
+                                Width="{Binding ActualWidth, ElementName=wrapper}"
+                                Height="20"
+                                Padding="0,0,5,0"
+                                >
+                                    <FlowDocument>
+                                        <Paragraph>
+                                            <Run Text="{Binding Mode=OneTime, Path=VariableName}"></Run>
+                                        </Paragraph>
+                                    </FlowDocument>
+                                </RichTextBox>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Chart name" HeaderTemplate="{StaticResource ResourceKey=myColumnHeaderTemplate}" SortMemberPath="ChartName">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    IsReadOnly="True"
+                                    TextWrapping="Wrap"
+                                    Text="{Binding Mode=OneTime, Path=ChartName}">
+                            </TextBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Chart" HeaderTemplate="{StaticResource ResourceKey=myColumnHeaderTemplate}" SortMemberPath="ChartPartitionName">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    IsReadOnly="True"
+                                    TextWrapping="Wrap"
+                                    Text="{Binding Mode=OneTime, Path=ChartPartitionName}">
+                            </TextBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Block name" HeaderTemplate="{StaticResource ResourceKey=myColumnHeaderTemplate}" SortMemberPath="BlockName">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    IsReadOnly="True"
+                                    TextWrapping="Wrap"
+                                    Text="{Binding Mode=OneTime, Path=BlockName}">
+                            </TextBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Pin name" HeaderTemplate="{StaticResource ResourceKey=myColumnHeaderTemplate}" SortMemberPath="PinName">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    IsReadOnly="True"
+                                    TextWrapping="Wrap"
+                                    Text="{Binding Mode=OneTime, Path=PinName}">
+                            </TextBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Pin type" HeaderTemplate="{StaticResource ResourceKey=myColumnHeaderTemplate}" SortMemberPath="PinType">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    IsReadOnly="True"
+                                    TextWrapping="Wrap"
+                                    Text="{Binding Mode=OneTime, Path=PinType}">
+                            </TextBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+
+            </DataGrid.Columns>
+            <DataGrid.Resources>
+                <Style TargetType="{x:Type DataGridCell}">
+                    <Setter Property="BorderBrush" Value="Transparent" />
+                    <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                </Style>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" 
+                   Color="Transparent"/>
+            </DataGrid.Resources>
+
+        </DataGrid>
+        <Button Grid.Row="2" Content="Update References" Width="120" Margin="0,10" HorizontalAlignment="Center" Click="UpdateButtonClick"/>
+    </Grid>
+</UserControl>
