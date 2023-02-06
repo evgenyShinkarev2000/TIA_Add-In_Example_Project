@@ -23,20 +23,12 @@ namespace TIA_Add_In_Example_Project
         TiaPortal _tiaPortal;
 
         private const string s_DisplayNameOfAddIn = "Add-In";
-        private readonly XMLViewLibrary.MainWindow mainWindow = new XMLViewLibrary.MainWindow();
-        private MenuSelectionProvider<DeviceItem> menuSelectionProvider = null;
+        private XMLViewLibrary.MainWindow mainWindow;
+        private MenuSelectionProvider<DeviceItem> menuSelectionProvider;
 
         public AddIn(TiaPortal tiaPortal) : base(s_DisplayNameOfAddIn)
         {
             _tiaPortal = tiaPortal;
-            //begin
-            mainWindow.Show();
-            mainWindow.UpdateButtonClickNotify += UpdateButtonClickExternalHandler;
-        }
-
-        ~AddIn()
-        {
-            mainWindow.UpdateButtonClickNotify -= UpdateButtonClickExternalHandler;
         }
 
         private void UpdateButtonClickExternalHandler(object sender, EventArgs e)
@@ -54,7 +46,13 @@ namespace TIA_Add_In_Example_Project
 
         private void OnDoSomething(MenuSelectionProvider<DeviceItem> menuSelectionProvider)
         {
-            this.menuSelectionProvider = menuSelectionProvider;
+            if (mainWindow == null)
+            {
+                this.menuSelectionProvider = menuSelectionProvider;
+                mainWindow = new XMLViewLibrary.MainWindow();
+                mainWindow.Show();
+                mainWindow.UpdateButtonClickNotify += UpdateButtonClickExternalHandler;
+            }
             //test(_tiaPortal);
             if (menuSelectionProvider.GetSelection().First() is DeviceItem)
             {
