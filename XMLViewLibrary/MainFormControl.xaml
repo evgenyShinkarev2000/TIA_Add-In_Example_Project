@@ -124,6 +124,12 @@
             </DataGrid.Resources>
 
         </DataGrid>
-        <Button Grid.Row="2" Content="Update References" Width="120" Margin="0,10" HorizontalAlignment="Center" Click="UpdateButtonClick"/>
+        <DockPanel Grid.Row="2">
+            <Button x:Name="updateFromXmlButton" Content="Update file" IsEnabled="False" Width="120" Margin="10" Click="UpdateButtonClick"></Button>
+            <CheckBox x:Name="autoUpdateCheckBox" Content="Auto-update" IsChecked="True" VerticalAlignment="Center"></CheckBox>
+            <Label x:Name="updatedAtLabel" Margin="10" Content="Updated at"></Label>
+            <Label x:Name="outdatedLabel" Content="Outdated" Visibility="Hidden" Foreground="OrangeRed" VerticalAlignment="Center"></Label>
+            <Button Content="Open file" Width="120" Margin="10" HorizontalAlignment="Right" Click="OpenFileButtonClick"/>
+        </DockPanel>
     </Grid>
 </UserControl>

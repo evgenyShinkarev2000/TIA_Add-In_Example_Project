@@ -25,13 +25,6 @@ namespace XMLViewLibrary
         public MainWindow()
         {
             InitializeComponent();
-
-            this.mainFormControl.UpdateButtonClickNotify += UpdateButtonClickInnerHandler;
-        }
-
-        ~MainWindow()
-        {
-            this.mainFormControl.UpdateButtonClickNotify -= UpdateButtonClickInnerHandler;
         }
 
         public void FlushData(IEnumerable<Data> dataRecords)
