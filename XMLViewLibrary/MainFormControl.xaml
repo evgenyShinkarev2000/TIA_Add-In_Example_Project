@@ -141,12 +141,12 @@
                       ScrollViewer.CanContentScroll="True"
                       >
             </ComboBox>
-            <RichTextBox IsReadOnly="True" x:Name="logAreaRichBox" Margin="0, 10" Width="500"></RichTextBox>
+            <RichTextBox IsReadOnly="True" Height="110" x:Name="logAreaRichBox" VerticalScrollBarVisibility="Visible" Margin="0, 10" Width="500"></RichTextBox>
             <StackPanel VerticalAlignment="Top" Margin="10" Visibility="{Binding FileInputPannelVisible, Mode=OneWay}">
-                <Button HorizontalAlignment="Left" x:Name="updateFromXmlButton" Content="Update file" IsEnabled="False" Width="120" Click="UpdateButtonClick"></Button>
-                <CheckBox HorizontalAlignment="Left" x:Name="autoUpdateCheckBox" Margin="0, 5, 0, 0" Content="Auto-update" IsChecked="True" VerticalAlignment="Center"></CheckBox>
-                <Label HorizontalAlignment="Left" Margin="-5, 0, 0, -5" x:Name="updatedAtLabel" Content="file"></Label>
-                <Label HorizontalAlignment="Left" Margin="-5, 0, 0, 0" x:Name="outdatedLabel" Content="data"></Label>
+                <Button HorizontalAlignment="Left" x:Name="updateFromXmlButton" Content="Update file" IsEnabled="{Binding IsUpdateButtonEnabled, Mode=OneWay}" Width="120" Click="UpdateButtonClick"></Button>
+                <CheckBox HorizontalAlignment="Left" x:Name="autoUpdateCheckBox" Margin="0, 5" Content="Auto-update" IsChecked="True" VerticalAlignment="Center" Checked="autoUpdateCheckBox_Switched" Unchecked="autoUpdateCheckBox_Switched"></CheckBox>
+                <!--Label HorizontalAlignment="Left" Margin="-5, 0, 0, -5" x:Name="updatedAtLabel" Content="file"></Label>
+                <Label HorizontalAlignment="Left" Margin="-5, 0, 0, 0" x:Name="outdatedLabel" Content="data"></Label!-->
                 <Button HorizontalAlignment="Left" Content="Open file" Height="20" Width="120" Click="OpenFileButtonClick"/>
             </StackPanel>
         </DockPanel>

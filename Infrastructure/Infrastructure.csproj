@@ -36,15 +36,17 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AbstractLogger.cs" />
     <Compile Include="Data.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="INotifyPropertyChangedFromAnywhere.cs" />
-    <Compile Include="ObservableProperty.cs" />
+    <Compile Include="DependentProperty.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="PinConnectionType.cs" />
     <Compile Include="PropertyWatcher.cs" />
     <Compile Include="QueueExtension.cs" />
+    <Compile Include="TrackedEventStatus.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="PresentationFramework" />

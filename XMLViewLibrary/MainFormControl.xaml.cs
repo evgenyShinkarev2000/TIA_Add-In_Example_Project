@@ -41,13 +41,36 @@ namespace XMLViewLibrary
             mainFormVM = new MainFormVM(logger);
             DataContext = mainFormVM;
             dataProvider = xmlDataProvider;
-            dataProvider.DataUpdated += FlushData;
-            dataProvider.Failed += logger.LogError;
+            dataProvider.DataUpdated += (data) =>
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    logger.LogAction("Got update");
+                    FlushData(data);
+                    logger.LogControlPointAction("End update");
+                });
+            };
+            dataProvider.LogEvents += (logEvent, eventStatus) =>
+            {
+                Dispatcher.Invoke(() => logger.LogWithStatus(logEvent, eventStatus));
+            };
+
+            xmlDataProvider.CanProvideUpdateChanged += UpdateButtonEnableHandler;
         }
 
         public void FlushData(IEnumerable<Data> dataRecords)
         {
-            mainFormVM.FlushData(dataRecords);
+            try
+            {
+                logger.LogAction("Starting flush data...");
+                mainFormVM.FlushData(dataRecords);
+                logger.LogAction("End flush data");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError("Cant flush data");
+                logger.LogError(ex);
+            }
         }
 
         private void OpenFileButtonClick(object sender, RoutedEventArgs e)
@@ -58,18 +81,44 @@ namespace XMLViewLibrary
             {
                 pathToSourceXml = dialog.FileName;
                 xmlDataProvider.WatchXmlFile(pathToSourceXml);
+                logger.LogAction("Starting update by open file button click");
                 xmlDataProvider.ForceUpdate();
             }
         }
 
         private void UpdateButtonClick(object sender, RoutedEventArgs e)
         {
-            xmlDataProvider.ForceUpdate();
+            try
+            {
+                logger.LogAction("Update button click. Starting update...");
+                xmlDataProvider.ForceUpdate();
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex);
+            }
         }
 
         private void SearchButtonClick(object sender, RoutedEventArgs e)
         {
             this.mainFormVM.SearchWord = this.mainFormVM.SearchWord;
+        }
+
+        private void UpdateButtonEnableHandler(bool canUpdate)
+        {
+            this.mainFormVM.IsUpdateButtonEnabled = canUpdate;
+        }
+
+        private void autoUpdateCheckBox_Switched(object sender, RoutedEventArgs e)
+        {
+            if (sender is CheckBox checkBox)
+            {
+                xmlDataProvider.IsRisingUpdates = checkBox.IsChecked ?? false;
+            }
+            else
+            {
+                throw new ArgumentException();
+            }
         }
     }
 }

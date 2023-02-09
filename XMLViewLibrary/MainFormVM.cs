@@ -82,6 +82,17 @@ namespace XMLViewLibrary
             get => $"Found {DataGridFilteredRecords.Count()}";
         }
 
+        private bool isUpdateButtonEnabled = false;
+        public bool IsUpdateButtonEnabled 
+        {
+            get => isUpdateButtonEnabled;
+            set
+            {
+                isUpdateButtonEnabled = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private readonly ILogger logger;

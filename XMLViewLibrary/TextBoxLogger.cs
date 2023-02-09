@@ -10,35 +10,42 @@ using System.Windows.Media;
 
 namespace XMLViewLibrary
 {
-    internal class TextBoxLogger : ILogger
+    internal class TextBoxLogger : AbstractLogger
     {
         private readonly RichTextBox logArea;
+        private readonly Color darkYellow = Color.FromRgb(0x9C, 0x81, 0x00);
 
         public TextBoxLogger(RichTextBox logArea)
         {
             this.logArea = logArea;
         }
-        public void LogAction(object stringConvertable) =>
+
+        public override void LogAction(object stringConvertable) =>
             AppendLine(stringConvertable, "info", Brushes.Black);
 
-        public void LogWarning(object stringConvertable) =>
-            AppendLine(stringConvertable, "warn", Brushes.Yellow);
+        public override void LogControlPointAction(object stringConvertabe) =>
+            AppendLine(stringConvertabe, "control info", Brushes.DarkCyan);
 
-        public void LogCritical(object stringConvertable) =>
-            AppendLine(stringConvertable, "critical", Brushes.Orange);
+        public override void LogWarning(object stringConvertable) =>
+            AppendLine(stringConvertable, "warn", new SolidColorBrush(darkYellow));
 
-        public void LogError(object stringConvertable) =>
-            AppendLine(stringConvertable, "error", Brushes.Red);
+        public override void LogCritical(object stringConvertable) =>
+            AppendLine(stringConvertable, "critical", Brushes.DarkOrange);
+
+        public override void LogError(object stringConvertable) =>
+            AppendLine(stringConvertable, "error", Brushes.DarkRed);
 
         private void AppendLine(object stringConvertable, string prefix, SolidColorBrush brush)
         {
-            var template = $"{DateTime.Now.ToShortTimeString()} {prefix}: {stringConvertable};";
-            var run = new Run(template);
-            run.Foreground = brush;
-            var paragraph = new Paragraph(run);
-            this.logArea.Dispatcher.Invoke(() =>
+            var infoRun = new Run($"{DateTime.Now.ToLongTimeString()} {prefix}: ");
+            infoRun.Foreground = brush;
+            var messageRun = new Run(stringConvertable.ToString());
+            logArea.Dispatcher.Invoke(() =>
             {
-                this.logArea.Document.Blocks.Add(paragraph);
+                var paragraph = logArea.Document.Blocks.FirstBlock as Paragraph;
+                paragraph.Inlines.Add("\n");
+                paragraph.Inlines.Add(infoRun);
+                paragraph.Inlines.Add(messageRun);
             });
         }
     }
