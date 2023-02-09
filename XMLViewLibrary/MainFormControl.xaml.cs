@@ -1,4 +1,5 @@
 ﻿using Infastructure;
+using Infrastructure;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -28,73 +29,25 @@ namespace XMLViewLibrary
     {
         private IEnumerable<Data> dataRecords = Enumerable.Empty<Data>();
         private string pathToSourceXml;
-        private readonly FileSystemWatcher fileWatcher = new FileSystemWatcher();
+        private readonly MainFormVM mainFormVM;
+        private readonly XmlDataProvider xmlDataProvider = new XmlDataProvider();
+        private IDataProvider dataProvider;
+        private readonly ILogger logger;
 
         public MainFormControl()
         {
             InitializeComponent();
-            fileWatcher.Changed += SourceFileChangeHandler;
-        }
-
-        ~MainFormControl()
-        {
-            fileWatcher.Dispose();
+            this.logger = new TextBoxLogger(this.logAreaRichBox);
+            mainFormVM = new MainFormVM(logger);
+            DataContext = mainFormVM;
+            dataProvider = xmlDataProvider;
+            dataProvider.DataUpdated += FlushData;
+            dataProvider.Failed += logger.LogError;
         }
 
         public void FlushData(IEnumerable<Data> dataRecords)
         {
-            if (dataRecords == null)
-            {
-                throw new ArgumentNullException();
-            }
-            this.dataRecords = dataRecords;
-            this.updatedAtLabel.Content = $"Updated at {DateTime.Now.ToLongTimeString()}";
-            this.updatedAtLabel.Foreground = Brushes.Black;
-            this.outdatedLabel.Visibility = Visibility.Hidden;
-            UpdateFilteredData();
-        }
-
-        private void SourceFileChangeHandler(object sender, EventArgs e)
-        {
-            Dispatcher.Invoke(() =>
-            {
-                this.updatedAtLabel.Foreground = new SolidColorBrush(Colors.OrangeRed);
-                this.outdatedLabel.Visibility = Visibility.Visible;
-                if (this.autoUpdateCheckBox.IsChecked == true)
-                {
-                    FlushDataFromXML();
-                }
-            });
-        }
-
-        private void SearchButtonClick(object sender, RoutedEventArgs e)
-        {
-            var searchWord = this.searchTextBox.Text?.Trim();
-            UpdateFilteredData(searchWord);
-        }
-
-        private void UpdateDataGrid(IEnumerable<Data> updatedData)
-        {
-            this.recordsDataGrid.ItemsSource = updatedData.Select(d => new DataVM(d));
-            this.foundCountLabel.Content = $"{this.recordsDataGrid.Items.Count} found";
-        }
-
-        private void UpdateFilteredData(string searchWord = "")
-        {
-            if (searchWord == "" || searchWord == null)
-            {
-                UpdateDataGrid(dataRecords);
-            }
-            else
-            {
-                UpdateDataGrid(dataRecords.Where(d => d.externalVariableName.Contains(searchWord)));
-            }
-        }
-
-        private void searchTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            var searchWord = this.searchTextBox.Text?.Trim();
-            UpdateFilteredData(searchWord);
+            mainFormVM.FlushData(dataRecords);
         }
 
         private void OpenFileButtonClick(object sender, RoutedEventArgs e)
@@ -104,34 +57,19 @@ namespace XMLViewLibrary
             if (dialog.ShowDialog() == true)
             {
                 pathToSourceXml = dialog.FileName;
-                fileWatcher.Path = System.IO.Path.GetDirectoryName(pathToSourceXml);
-                fileWatcher.Filter = System.IO.Path.GetFileName(pathToSourceXml);
-                fileWatcher.EnableRaisingEvents = true;
-                this.updateFromXmlButton.IsEnabled = true;
-                FlushDataFromXML();
-            }
-        }
-
-        private IEnumerable<Data> GetDataFromXml()
-        {
-            Thread.Sleep(500);
-            using(var fileStream = File.OpenRead(pathToSourceXml))
-            {
-                var document = XDocument.Load(fileStream);
-
-                return Parser.Parse(document);
+                xmlDataProvider.WatchXmlFile(pathToSourceXml);
+                xmlDataProvider.ForceUpdate();
             }
         }
 
         private void UpdateButtonClick(object sender, RoutedEventArgs e)
         {
-            FlushDataFromXML();
+            xmlDataProvider.ForceUpdate();
         }
 
-        private void FlushDataFromXML()
+        private void SearchButtonClick(object sender, RoutedEventArgs e)
         {
-            var dataRecords = GetDataFromXml();
-            FlushData(dataRecords);
+            this.mainFormVM.SearchWord = this.mainFormVM.SearchWord;
         }
     }
 }

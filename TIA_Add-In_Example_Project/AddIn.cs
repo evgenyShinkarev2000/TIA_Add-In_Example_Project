@@ -24,7 +24,6 @@ namespace TIA_Add_In_Example_Project
         TiaPortal _tiaPortal;
 
         private const string s_DisplayNameOfAddIn = "Add-In";
-        private XMLViewLibrary.MainWindow mainWindow;
         private MenuSelectionProvider<DeviceItem> menuSelectionProvider;
         private const string logFileName = "MyLogs.log";
 

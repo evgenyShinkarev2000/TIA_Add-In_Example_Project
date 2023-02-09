@@ -37,10 +37,18 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Data.cs" />
+    <Compile Include="Entity.cs" />
+    <Compile Include="ILogger.cs" />
+    <Compile Include="INotifyPropertyChangedFromAnywhere.cs" />
+    <Compile Include="ObservableProperty.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="PinConnectionType.cs" />
+    <Compile Include="PropertyWatcher.cs" />
+    <Compile Include="QueueExtension.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
